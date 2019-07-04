@@ -24,7 +24,7 @@
 - (void)refreshViews {
 
     // TO-DO
-    _retweetCountLabel.text = [NSString stringWithFormat:@"%d",_tweet.retweetCount];
+    _retweet_count.text = [NSString stringWithFormat:@"%d",_tweet.retweetCount];
 }
 
 @end

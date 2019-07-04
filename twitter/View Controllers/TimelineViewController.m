@@ -7,6 +7,7 @@
 //
 
 #import "TimelineViewController.h"
+#import "UIImageView+AFNetworking.h"
 #import "APIManager.h"
 #import "Tweet.h"
 #import "TweetCell.h"
@@ -14,6 +15,10 @@
 
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property(strong, nonatomic) NSArray *tweets;
+@property(weak, nonatomic) IBOutlet UITableView *tableView;
+
 @end
 
 
@@ -23,10 +28,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+   
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self action:@selector(beginRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView insertSubview:refreshControl atIndex:0];
     [super viewDidLoad];
     [super viewDidLoad];
-    
+    // Initialize a UIRefreshControl
+
+
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
@@ -51,11 +62,32 @@
     }];
     
 }
-
+- (void)beginRefresh:(UIRefreshControl *)refreshControl {
+    
+    // Create NSURL and NSURLRequest
+    
+    [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *newTweets, NSError *error) {
+        if (newTweets) {
+            NSLog(@"😎😎😎 Successfully loaded home timeline");
+            
+            self.tweets = [newTweets mutableCopy];
+            
+            for (Tweet *tweet in newTweets) {
+                NSString *text = tweet.text;
+                
+                NSLog(@"%@", text);
+            }
+            
+            [[self tableView] reloadData];
+            
+        } else {
+            NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
+        }
+    }];
 // numberOfRowsInSection
 
 // cellForIndexPath
-
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -77,21 +109,24 @@
     // initialize a blank TweetCell
     TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ReusableTweetCell"];
     
+    
     // populate that cell (set the labels' text and etc)
     Tweet *tweet = _tweets[indexPath.row];
     cell.tweet = tweet;
     [cell refreshViews];
-    
+    cell.name.text = tweet.user.name;
+    cell.screen_name.text = tweet.user.screenName;
+    cell.text.text=tweet.text;
+    cell.created_at.text = tweet.createdAtString;
+    cell.favorite_count.text=[NSString stringWithFormat: @"%i", tweet.favoriteCount];
+    cell.retweet_count.text=[NSString stringWithFormat: @"%i", tweet.retweetCount];
+
     // return that cell
     return cell;
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(_tweets == nil) {
-        return 0;
-    } else {
-        return _tweets.count;
-    }
+    return self.tweets.count;
 }
 
 @end

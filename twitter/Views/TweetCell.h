@@ -12,15 +12,18 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TweetCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *name;
+@property (weak, nonatomic) IBOutlet UILabel *screen_name;
+@property (weak, nonatomic) IBOutlet UILabel *created_at;
+@property (weak, nonatomic) IBOutlet UILabel *text;
+@property (weak, nonatomic) IBOutlet UILabel *favorite_count;
+@property (weak, nonatomic) IBOutlet UIButton *favorited;
+@property (weak, nonatomic) IBOutlet UILabel *retweet_count;
+@property (weak, nonatomic) IBOutlet UIButton *retweeted;
+@property (weak, nonatomic) IBOutlet UIImageView *profile_image_url_https;
 
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *screennameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *createdAtLabel;
-@property (weak, nonatomic) IBOutlet UILabel *textLabel;
-@property (weak, nonatomic) IBOutlet UILabel *retweetCountLabel;
-@property (weak, nonatomic) IBOutlet UILabel *favoriteCountLabel;
-@property (weak, nonatomic) IBOutlet UIButton *favoriteButton;
-@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
+
+
 
 @property (nonatomic, strong) Tweet *tweet;
 
@@ -28,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshViews;
 
 
-
+//nameLabel, screennameLabel,createdAtLabel, textLabel,retweetCountLabel, favoriteCountLabel, favoriteButton,retweetButton
 
 @end
 
