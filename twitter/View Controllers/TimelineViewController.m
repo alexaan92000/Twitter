@@ -7,6 +7,7 @@
 //
 
 #import "TimelineViewController.h"
+#import "ComposrViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "APIManager.h"
 #import "Tweet.h"
@@ -14,7 +15,7 @@
 
 
 
-@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface TimelineViewController () <ComposeViewControllerDelegate, UITableViewDelegate>
 
 @property(strong, nonatomic) NSArray *tweets;
 @property(weak, nonatomic) IBOutlet UITableView *tableView;
@@ -33,8 +34,6 @@
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
         [refreshControl addTarget:self action:@selector(beginRefresh:) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:refreshControl atIndex:0];
-    [super viewDidLoad];
-    [super viewDidLoad];
     // Initialize a UIRefreshControl
 
 
@@ -120,13 +119,25 @@
     cell.created_at.text = tweet.createdAtString;
     cell.favorite_count.text=[NSString stringWithFormat: @"%i", tweet.favoriteCount];
     cell.retweet_count.text=[NSString stringWithFormat: @"%i", tweet.retweetCount];
+//    cell.profile_image_url_https.text= profile_image_url_https
 
+    
     // return that cell
     return cell;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    UINavigationController *navigationController = [segue destinationViewController];
+    ComposrViewController *composrController = (ComposrViewController*)navigationController.topViewController;
+    composrController.delegate = self;
+}
+
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.tweets.count;
+}
+
+- (void)didTweet:(Tweet *)tweet {
+    // do stuff :)
 }
 
 @end
